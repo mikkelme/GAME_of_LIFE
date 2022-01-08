@@ -9,15 +9,37 @@ import time
 class GAME_of_LIFE:
     def __init__(self, dim):
         self.dim = dim
+        print(dim)
         self.cells = np.zeros((dim), dtype = int)
         self.cells_new = np.zeros((dim), dtype = int)
         self.b_wrap_x = [dim[0]-1] + [k for k in range(dim[0])] + [0]
         self.b_wrap_y = [dim[1]-1] + [k for k in range(dim[1])] + [0]
 
-
         # plot cells
         self.fig, self.ax = plt.subplots()
         self.plot()
+
+
+        self.ax.set_xticks(np.linspace(0,1,dim[0]+1), minor=False)
+        self.ax.set_xticks(np.linspace(0,1,dim[0]+1), minor=True)
+        self.ax.xaxis.grid(True, which='major')
+        self.ax.xaxis.grid(True, which='minor')
+
+        self.ax.set_yticks(np.linspace(0,1,dim[1]+1), minor=False)
+        self.ax.set_yticks(np.linspace(0,1,dim[1]+1), minor=True)
+        self.ax.yaxis.grid(True, which='major')
+        self.ax.yaxis.grid(True, which='minor')
+
+
+
+        #
+        # # Customize the major grid
+        # self.ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
+        # # Customize the minor grid
+        # self.ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+        #
+        # # self.ax.grid(color='red', linestyle='-', linewidth=1)
+
 
         # Remove ticks
         self.ax.xaxis.set_ticklabels([])
@@ -65,14 +87,10 @@ class GAME_of_LIFE:
     def plot(self):
         self.ax.imshow(self.cells, origin = "upper", extent = (0,1,0,1), cmap='Greys', vmin = 0, vmax = 1)
 
-    def plot_new(self):
-        self.ax.imshow(self.cells_new, origin = "upper", extent = (0,1,0,1), cmap='Greys', vmin = 0, vmax = 1)
 
 
 
     def set_init(self):
-        self.ax.grid(color='red', linestyle='-', linewidth=1)
-
         # Enable button_press_event
         self.cid = self.fig.canvas.mpl_connect('button_press_event', self.pick_cell)
 
@@ -118,24 +136,11 @@ class GAME_of_LIFE:
     def start(self, botton_axes):
         self.round = 0
         runtime = 10
-        print("start button hit")
         self.fig.canvas.mpl_disconnect(self.cid)
-
-
 
 
         self.start_stop.label.set_visible(False)
         self.start_stop.stop_label.set_visible(True)
-
-        # self.start_button.disconnect(self.start_id)
-        #
-        # start_button = Button(self.start_ax, 'Stop',color='lightgrey', hovercolor='lightgreen')
-        # start_button.on_clicked(self.stop)
-
-        # # Add stop button
-        # stop_ax = plt.axes([0.65, 0.02, 0.1, 0.075])
-        # stop_button = Button(stop_ax, 'Stop',color='lightgrey', hovercolor='lightgreen')
-        # stop_button.on_clicked(self.stop)
 
 
         while self.round <= runtime:
@@ -197,7 +202,7 @@ class GAME_of_LIFE:
 
 
 if __name__ == "__main__":
-    dim = (5,5)
+    dim = (20,20)
 
     game = GAME_of_LIFE(dim)
     game.set_init()
