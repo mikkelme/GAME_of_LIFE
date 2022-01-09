@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
-import matplotlib.patches as patches
+from matplotlib.widgets import TextBox
 import time
 
 
@@ -9,7 +9,11 @@ import time
 class GAME_of_LIFE:
     def __init__(self, dim):
         self.dim = dim
-        print(dim)
+        self.length = np.array([0.0,0.0])
+        self.length[np.argmax(dim)] = 1
+        self.length[np.argmin(self.length)] = dim[np.argmin(dim)]/dim[np.argmax(dim)]
+
+
         self.cells = np.zeros((dim), dtype = int)
         self.cells_new = np.zeros((dim), dtype = int)
         self.b_wrap_x = [dim[0]-1] + [k for k in range(dim[0])] + [0]
@@ -20,25 +24,15 @@ class GAME_of_LIFE:
         self.plot()
 
 
-        self.ax.set_xticks(np.linspace(0,1,dim[0]+1), minor=False)
-        self.ax.set_xticks(np.linspace(0,1,dim[0]+1), minor=True)
+        self.ax.set_xticks(np.linspace(0,self.length[1],dim[1]+1), minor=False)
+        self.ax.set_xticks(np.linspace(0,self.length[1],dim[1]+1), minor=True)
         self.ax.xaxis.grid(True, which='major')
         self.ax.xaxis.grid(True, which='minor')
 
-        self.ax.set_yticks(np.linspace(0,1,dim[1]+1), minor=False)
-        self.ax.set_yticks(np.linspace(0,1,dim[1]+1), minor=True)
+        self.ax.set_yticks(np.linspace(0,self.length[0],dim[0]+1), minor=False)
+        self.ax.set_yticks(np.linspace(0,self.length[0],dim[0]+1), minor=True)
         self.ax.yaxis.grid(True, which='major')
         self.ax.yaxis.grid(True, which='minor')
-
-
-
-        #
-        # # Customize the major grid
-        # self.ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
-        # # Customize the minor grid
-        # self.ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-        #
-        # # self.ax.grid(color='red', linestyle='-', linewidth=1)
 
 
         # Remove ticks
@@ -50,13 +44,18 @@ class GAME_of_LIFE:
         self.flip = [1, 0]
 
 
+        # Extra things
+        self.generation = 0
+        self.running = False
+        self.pause = 0.05
+
 
     def coordinate_to_index(self, x, y,  extent):
         # Cell info
-        x_cell_length = (extent[1]-extent[0])/dim[0]
-        x_centers = extent[0] + np.arange(dim[0]) * x_cell_length + x_cell_length/2
-        y_cell_length = (extent[2]-extent[3])/dim[1]
-        y_centers = extent[3] + np.arange(dim[1]) * y_cell_length + y_cell_length/2
+        x_cell_length = self.length[1]/dim[1]
+        y_cell_length = self.length[0]/dim[0]
+        x_centers = 0 + np.arange(dim[1]) * x_cell_length + x_cell_length/2
+        y_centers = np.arange(dim[0])[::-1] * y_cell_length + y_cell_length/2
 
         # Cell indexes
         ix = np.argmin(abs(x_centers - x))
@@ -78,16 +77,17 @@ class GAME_of_LIFE:
 
             # Flip cell
             self.cells[ix,iy] = self.flip[self.cells[ix,iy]]
+            # print(self.cells)
 
             # Redraw
             self.plot()
             self.fig.canvas.draw()
 
 
+
+
     def plot(self):
-        self.ax.imshow(self.cells, origin = "upper", extent = (0,1,0,1), cmap='Greys', vmin = 0, vmax = 1)
-
-
+        self.ax.imshow(self.cells, origin = "upper", extent = (0,self.length[1],0,self.length[0]), cmap='Greys', vmin = 0, vmax = 1)
 
 
     def set_init(self):
@@ -98,7 +98,7 @@ class GAME_of_LIFE:
         # Add start/stop button
         self.start_stop_ax = plt.axes([0.85, 0.02, 0.1, 0.075])
         self.start_stop = Button(self.start_stop_ax, 'Start',color='lightgrey', hovercolor='lightgreen')
-        self.start_stop.on_clicked(self.start)
+        self.start_stop.on_clicked(self.run)
 
         self.start_stop.stop_label = self.start_stop_ax.text(
             0.5, 0.5, 'Stop',
@@ -118,14 +118,52 @@ class GAME_of_LIFE:
         reset_button = Button(reset_ax, 'Reset',color='lightgrey', hovercolor='lightgreen')
         reset_button.on_clicked(self.reset)
 
+        # Add random button
+        random_ax = plt.axes([0.225, 0.02, 0.1, 0.075])
+        random_button = Button(random_ax, 'Random',color='lightgrey', hovercolor='lightgreen')
+        random_button.on_clicked(self.random)
+        self.random_pct = 20
 
+        random_input_ax = plt.axes([0.35, 0.02, 0.05, 0.075])
+        text_box = TextBox(random_input_ax, '', initial=str(self.random_pct))
+        text_box.on_submit(self.random_input)
+
+        text_box.label = random_input_ax.text(
+            1.5, 0.5, '%',
+            verticalalignment='center',
+            horizontalalignment='center',
+            transform=random_input_ax.transAxes)
 
 
         plt.show()
 
+
+    def random_input(self, text):
+        try:
+            self.random_pct = eval(text)
+        except:
+            print("Please insert number between 0-100")
+        if self.random_pct < 0:
+            self.random_pct = 0
+        elif self.random_pct > 100:
+            self.random_pct = 100
+
+        print(f"Random generator set to {self.random_pct} %")
+
+
+    def random(self, botton_axes):
+        RN = np.random.rand(dim[0],dim[1])
+        self.cells = np.where(RN < self.random_pct/100, 1, 0)
+        self.plot()
+        self.fig.canvas.draw()
+
+
+
     def reset(self, botton_axes):
         self.cells = np.zeros((dim), dtype = int)
         self.plot()
+        self.generation = 0
+        self.ax.set_title("")
         self.fig.canvas.draw()
 
 
@@ -133,21 +171,26 @@ class GAME_of_LIFE:
     def stop(self, botton_axes):
         exit()
 
-    def start(self, botton_axes):
-        self.round = 0
-        runtime = 10
-        self.fig.canvas.mpl_disconnect(self.cid)
+    def run(self, botton_axes):
+
+        if not self.running: # Start
+            self.start_stop.label.set_visible(False)
+            self.start_stop.stop_label.set_visible(True)
+            self.fig.canvas.mpl_disconnect(self.cid)
+            self.running = True
+
+            while self.running:
+                self.advance()
+                plt.pause(self.pause)
 
 
-        self.start_stop.label.set_visible(False)
-        self.start_stop.stop_label.set_visible(True)
 
+        elif self.running: # Stop
+            self.start_stop.stop_label.set_visible(False)
+            self.start_stop.label.set_visible(True)
+            self.cid = self.fig.canvas.mpl_connect('button_press_event', self.pick_cell)
+            self.running = False
 
-        while self.round <= runtime:
-            self.advance()
-            print(self.round)
-            plt.pause(0.05)
-            self.round += 1
 
 
     def get_neighbour_sum(self, i,j):
@@ -167,6 +210,8 @@ class GAME_of_LIFE:
     def advance(self, *args):
         # Copy old configuration
         self.cells_new[:,:] = self.cells[:,:]
+
+
 
         for i in range(dim[0]):
             for j in range(dim[1]):
@@ -189,6 +234,8 @@ class GAME_of_LIFE:
         # Redraw
         self.cells[:,:] = self.cells_new[:,:]
         self.plot()
+        self.generation += 1
+        self.ax.set_title(f"Generation: {self.generation}")
         self.fig.canvas.draw()
 
 
@@ -198,13 +245,8 @@ class GAME_of_LIFE:
 
 
 
-
-
-
 if __name__ == "__main__":
-    dim = (20,20)
+    dim = (15,15)
 
     game = GAME_of_LIFE(dim)
     game.set_init()
-
-    exit()
