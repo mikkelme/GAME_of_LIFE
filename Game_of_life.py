@@ -62,104 +62,146 @@ class GAME_of_LIFE:
         self.ax.set_title("GAME OF LIFE", y = self.title_y)
 
 
-
+        # print(self.ax) #[left, bottom, width, height]
         self.launch()
 
 
     def launch(self):
-        # Enable button_press_event
-        self.cid_stop = self.fig.canvas.mpl_connect('close_event', self.window_closed)
 
+        # Axis positions
+        ax_pos = self.ax.get_position()._points
+        print(ax_pos)
 
-        # Add start/stop button
-        self.start_stop_ax = plt.axes([0.85, 0.02, 0.1, 0.075])
-        self.start_stop = Button(self.start_stop_ax, 'Start',color='lightgrey', hovercolor='lightgreen')
-        self.cid_start_stop = self.start_stop.on_clicked(self.run)
-
-
-        self.start_stop.stop_label = self.start_stop_ax.text(
-            0.5, 0.5, 'Stop',
-            verticalalignment='center',
-            horizontalalignment='center',
-            transform=self.start_stop_ax.transAxes)
-        self.start_stop.stop_label.set_visible(False)
-
-
-        # Add reset button
-        reset_ax = plt.axes([0.85, 0.18, 0.1, 0.075])
-        self.reset_button = Button(reset_ax, 'Reset',color='lightgrey', hovercolor='lightgreen')
-
-        # Add advance button
-        advance_ax = plt.axes([0.85, 0.1, 0.1, 0.075])
-        self.advance_button = Button(advance_ax, 'Advance',color='lightgrey', hovercolor='lightgreen')
-
+        std_button_length = 0.1
+        std_button_height = 0.075
+        axis_padding = 0.015
+        spacer = 0.01
 
         # Add random button
-        random_ax = plt.axes([0.225, 0.02, 0.1, 0.075])
+        random_ax = plt.axes([      ax_pos[0,0],
+                                    ax_pos[0,1] - std_button_height - axis_padding,
+                                    std_button_length,
+                                    std_button_height ])
         self.random_button = Button(random_ax, 'Random',color='lightgrey', hovercolor='lightgreen')
-        # self.random_pct = 20
 
-        random_input_ax = plt.axes([0.35, 0.02, 0.05, 0.075])
-        # self.submit = TextBox(random_input_ax, '', initial=str(self.random_pct), textalignment='center')
+        # Add sumbit textbox for random button
+        random_input_ax = plt.axes([random_ax.get_position()._points[1,0] + spacer,
+                                    ax_pos[0,1] - std_button_height - axis_padding,
+                                    0.05,
+                                    std_button_height])
         self.submit = TextBox(random_input_ax, '', initial=str(self.random_pct))
-
         self.submit.label = random_input_ax.text(
-            1.5, 0.5, '%',
+            1.3, 0.5, '%',
             verticalalignment='center',
             horizontalalignment='center',
             transform=random_input_ax.transAxes)
 
 
-        # Add test button
-        test_ax = plt.axes([0.85, 0.8, 0.1, 0.075])
-        self.test_button = Button(test_ax, 'TEST',color='lightgrey', hovercolor='lightgreen')
-
-
 
         # Create slider
-        # self.slider_vals= np.array([1,2,3,4,5])
-        self.slider_ax = plt.axes([0.5, 0.02, 0.3, 0.03])
-        self.slider = Slider(self.slider_ax, '', 1, 5, valinit=self.valinit, valstep=1, color="green" )
+        space_betw_sumbit_and_slider = 10*spacer
+        slider_ax = plt.axes([ random_input_ax.get_position()._points[1,0] + space_betw_sumbit_and_slider,
+                                    ax_pos[0,1] - std_button_height - axis_padding,
+                                    ax_pos[1,0] - random_input_ax.get_position()._points[1,0] - space_betw_sumbit_and_slider,
+                                    0.03])
+
+        self.slider = Slider(slider_ax, '', 1, 5, valinit=self.valinit, valstep=1, color="green" )
         self.slider.valtext.set_visible(False)
         self.cid_slider = self.slider.on_changed(self.update_speed)
         self.pause = self.pause_array[self.slider.val-1]
-        self.slider.text = self.ax.text(0.5, -0.055, f"Pause: {self.pause}")
+        self.slider.text = self.ax.text(slider_ax.get_position()._points[0,0] - 3*spacer, -0.055, f"Speed: {self.slider.val}/5    (Pause: {self.pause:.2f})")
 
+
+
+        # Add start/stop button
+        start_stop_ax = plt.axes([ax_pos[1,0] + 0.25*std_button_length + axis_padding, 0.02, std_button_length, std_button_height])
+        self.start_stop = Button(start_stop_ax, 'Start',color='lightgrey', hovercolor='lightgreen')
+        self.cid_start_stop = self.start_stop.on_clicked(self.run)
+
+
+        self.start_stop.stop_label = start_stop_ax.text(
+            0.5, 0.5, 'Stop',
+            verticalalignment='center',
+            horizontalalignment='center',
+            transform=start_stop_ax.transAxes)
+        self.start_stop.stop_label.set_visible(False)
+
+        # Add advance button
+        advance_ax = plt.axes([ start_stop_ax.get_position()._points[0,0],
+                                start_stop_ax.get_position()._points[1,1] + spacer + axis_padding,
+                                std_button_length,
+                                std_button_height])
+        self.advance_button = Button(advance_ax, 'Advance',color='lightgrey', hovercolor='lightgreen')
+
+
+        # Add reset button
+        reset_ax = plt.axes([   start_stop_ax.get_position()._points[0,0],
+                                advance_ax.get_position()._points[1,1] + spacer,
+                                std_button_length,
+                                std_button_height])
+        self.reset_button = Button(reset_ax, 'Reset',color='lightgrey', hovercolor='lightgreen')
 
         # Add dimension buttons
-        self.dim_refresh_ax = plt.axes([0.82, 0.27, 0.16, 0.075])
-        self.dim_refresh_ax.text(0.5,1.5, r"$\times$", ha='center', va='center')
-        self.xdim_ax = plt.axes([0.82, 0.35, 0.06, 0.075])
-        self.ydim_ax = plt.axes([0.92, 0.35, 0.06, 0.075])
+        dim_refresh_ax = plt.axes([ start_stop_ax.get_position()._points[0,0] - 0.25*std_button_length ,
+                                    reset_ax.get_position()._points[1,1] + spacer + axis_padding,
+                                    1.5*std_button_length,
+                                    std_button_height])
+        dim_refresh_ax.text(0.49,1.6, r"$\times$", size = 12, ha='center', va='center')
+        TextBox_length = 0.06
+        self.xdim_ax = plt.axes([dim_refresh_ax.get_position()._points[0,0], dim_refresh_ax.get_position()._points[1,1] + spacer, TextBox_length, std_button_height])
+        self.ydim_ax = plt.axes([dim_refresh_ax.get_position()._points[1,0] -  TextBox_length, dim_refresh_ax.get_position()._points[1,1] + spacer, TextBox_length, std_button_height])
 
 
-        self.refresh_button = Button(self.dim_refresh_ax, 'Refresh dim', color='lightgrey', hovercolor='lightgreen')
+        self.refresh_button = Button(dim_refresh_ax, 'Refresh dim', color='lightgrey', hovercolor='lightgreen')
         self.xdim_submit = TextBox(self.xdim_ax, '', initial=str(self.dim[0]))
         self.ydim_submit = TextBox(self.ydim_ax, '', initial=str(self.dim[1]))
 
-        self.pause = 0.5
+
+        # Add symmetric builder
+        sym_ax = plt.axes([start_stop_ax.get_position()._points[0,0], ax_pos[1,1]-std_button_height, std_button_length, std_button_height])
+        self.sym_button = Button(sym_ax, 'RN Sym',color='lightgrey', hovercolor='lightgreen')
+
+
+
+
+
+
+
 
 
         # Activate buttons
         self.activate_buttons()
+
+
+        # Enable button_press_event
+        self.cid_stop = self.fig.canvas.mpl_connect('close_event', self.window_closed)
+
 
         plt.show()
 
 
 
 
-    # def submitting(self, event):
-    #     "Keeps the textbox active while submitting"
-    #     self.submitted = False
-    #
-    #     while not self.submitted:
-    #         self.update_plot()
-    #         plt.pause(1)
-    #
+    def RN_sym(self, event):
+        print("sym")
+        xint_half = self.dim[1]//2
+        left_over = self.dim[1]%2
+
+        RN = np.random.rand(dim[0], xint_half)
+        RN_binary = np.where(RN < self.random_pct/100, 1, 0)
+        RN_binary_flip = np.flip(RN_binary, axis = 1)
 
 
-    def test(self, event):
-        print("test")
+        print(xint_half,xint_half+left_over)
+        print(xint_half, self.dim[1])
+        self.cells[:, :xint_half] = RN_binary
+        self.cells[:, xint_half+left_over:self.dim[1]] = RN_binary_flip
+
+        # self.cells[:xint_half,:] = np.flip(self.cells[:, :xint_half])
+        # print(self.cells)
+        self.generation = 0
+        self.update_plot()
+        self.fig.canvas.draw_idle()
 
 
 
@@ -180,7 +222,7 @@ class GAME_of_LIFE:
 
 
 
-        self.cid_test = self.test_button.on_clicked(self.test)
+        self.cid_sym = self.sym_button.on_clicked(self.RN_sym)
 
 
 
@@ -191,18 +233,15 @@ class GAME_of_LIFE:
         self.start_stop.stop_label.set_visible(True)
         self.fig.canvas.mpl_disconnect(self.cid_pick)
 
-        self.reset_button.disconnect(self.cid_test)
+        self.reset_button.disconnect(self.cid_reset)
         self.advance_button.disconnect(self.cid_advance)
         self.random_button.disconnect(self.cid_random)
         self.submit.disconnect(self.cid_submit)
-        self.test_button.disconnect(self.cid_test)
+        self.sym_button.disconnect(self.cid_sym)
         # self.slider.disconnect(self.cid_slider)
 
 
         # self.submit.set_active(False) ????
-
-
-
 
 
 
@@ -287,7 +326,7 @@ class GAME_of_LIFE:
     def update_speed(self, event    ):
         index = self.slider.val - 1
         self.pause = self.pause_array[index]
-        self.slider.text.set_text(f"Pause: {self.pause}")
+        self.slider.text.set_text(f"Speed: {self.slider.val}/5    (Pause: {self.pause:.2f})")
 
 
 
