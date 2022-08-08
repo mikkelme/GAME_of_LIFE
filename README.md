@@ -27,8 +27,8 @@ To start a game use the features a explained in the following.
 |  Actions | Functionality | 
 |---|:---:|
 | Click on the squares | Toggles cell on/off (black/white) |
-| Click the Random button| Generates a random configuration with probability $p$ of getting an cell on (black) ... to the percentage level to the right (default is 20 \%) | 
-| Click on the SYM button| |
+| Click the **Random** button| Generates a random configuration with probability $p$ of getting an cell on (black) ... to the percentage level to the right (default is 20 \%) | 
+| Click on the *SYM* button| |
 
 
 
