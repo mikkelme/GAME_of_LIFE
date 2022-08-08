@@ -8,7 +8,6 @@ To try out the GUI simply run
 
 ``` 
 python GAME_of_LIFE.py
-
 ```
 to start the GUI, and the following should appear. 
 
