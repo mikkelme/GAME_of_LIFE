@@ -31,7 +31,7 @@ To set up and start a game use the features as explained in the following.
 |---|:---|
 | Click on a square in the grid. | Toggles cell live/dead (black/white). |
 | Enter number: $\fbox{0-100}$ \%, in the percentage text field. | Sets the probability for a cell live be on when generating random configurations (default is 20 \%).|
-| Click the $\fbox{Random}$ button. | Generates a random configuration of uniform distribution corresponding to the set probability. | 
+| Click the $\fbox{\text{Random}}$ button. | Generates a random configuration of uniform distribution corresponding to the set probability. | 
 | Click the **SYM** button.| Generates a random configuration of uniform distribution for half the grid corresponding to the set probability and mirrors it to the other half through the vertical axis.|
 | Set slider level (5 options) | Set game advancing speed as number of seconds to pause between generations (Note that this is a little glitchy as it is affected by mouse movemenet). |
 | Enter numbers $\fbox{1≥} \times \fbox{1≥}$. | Set custom dimension for the grid in terms of number of cells in x and y direction (default is $10 \times 10$). |
