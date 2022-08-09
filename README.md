@@ -1,10 +1,10 @@
 # Game of life (GUI)
 
-This is a small hobby based project where I implemented a graphical user interface (GUI) for [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) as a way of getting familiar with some the functionalities of matplotlib.widgets.
+This is a small hobby based project where I implemented a graphical user interface (GUI) for [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) as a way of getting familiar with some of the functionalities of matplotlib.widgets.
 
 ## Rules 
 
-The rules are as follows.
+Game of life is a zero-player game which plays out on a 2D board of cells (dead or live). To start the game one must choose a configuration of live cells. The game then proceeds generation by generation by the following rules.
 
 1. Any live cell with two or three live neighbours survives.
 2. Any dead cell with three live neighbours becomes a live cell.
@@ -28,20 +28,22 @@ This should prompt the following matplotlib window.
     </h5>
 </p>
 
-To set up and start a game use the features as explained in the following. 
+To set up and start a game use the features as explained in the following.
 
+
+GENERATION
 |  Actions | Functionality | 
 |---|:---|
-| Click on a square in the grid. | Toggles cell on/off (black/white). |
-| Enter number: 0-100 \%, in the percentage text field. | Sets the probability for a cell to be on when generating random configurations (default is 20 \%).|
+| Click on a square in the grid. | Toggles cell live/dead (black/white). |
+| Enter number: $\fbox{0-100}$ \%, in the percentage text field. | Sets the probability for a cell live be on when generating random configurations (default is 20 \%).|
 | Click the **Random** button. | Generates a random configuration of uniform distribution corresponding to the set probability. | 
 | Click the **SYM** button.| Generates a random configuration of uniform distribution for half the grid corresponding to the set probability and mirrors it to the other half through the vertical axis.|
-| Set slider level (5 options) | Set game advancing speed as number of seconds to pause between frames (Note that this is a little glitchy as it is affected by mouse movemenet). |
-| Enter numbers in $\fbox{10} \times \fbox{10}$ | Set custom dimension for the grid in terms of number of cells in x and y direction (default is $10 \times 10$). |
+| Set slider level (5 options) | Set game advancing speed as number of seconds to pause between generations (Note that this is a little glitchy as it is affected by mouse movemenet). |
+| Enter numbers $\fbox{1≥} \times \fbox{1≥}$. | Set custom dimension for the grid in terms of number of cells in x and y direction (default is $10 \times 10$). |
 | Click the **Refresh dim** button | Update the grid after seting new custom dimensions. |
-| Click the **Reset** button | Put all cells back to an off-state. |
-| Click the **Advance** button | Advance the configuration by one step |
-| Click the **Start/Stop** button | Start and stop the advancing of the game. |
+| Click the **Reset** button. | Put all cells back to a dead-state. |
+| Click the **Advance** button. | Advance the configuration by one generation |
+| Click the **Start/Stop** button. | Start and stop the advancing of the game. |
 
 
 ## Requirements
