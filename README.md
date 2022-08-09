@@ -4,7 +4,7 @@ This is a small hobby based project where I implemented a graphical user interfa
 
 ## Rules 
 
-Game of life is a zero-player game which plays out on a 2D board of cells (dead or live). To start the game one must choose a configuration of live cells. The game then proceeds generation by generation by the following rules.
+Game of life is a zero-player game which plays out on a 2D board of cells (dead or live). To start the game one must choose a configuration of live cells. The game then proceeds generation by generation following the rules:
 
 1. Any live cell with two or three live neighbours survives.
 2. Any dead cell with three live neighbours becomes a live cell.
@@ -27,8 +27,6 @@ This should prompt the following matplotlib window.
 
 To set up and start a game use the features as explained in the following.
 
-
-GENERATION
 |  Actions | Functionality | 
 |---|:---|
 | Click on a square in the grid. | Toggles cell live/dead (black/white). |
