@@ -53,6 +53,6 @@ In order to run the code you need to have Python 3 with matplotlib. I used Pytho
          alt=""
          style="width:80%">
     <h5 align="left"> 
-    $1000 generations of a 100 \times $100$ grid initiated with a 15\% live-rate random configuration.
+    1000 generations of a $100 \times 100$ grid initiated with a 15\% live-rate random configuration.
     </h5>
 </p>
