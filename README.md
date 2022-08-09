@@ -23,9 +23,6 @@ This should prompt the following matplotlib window.
     <img src="figures/startup_view.png"
          alt=""
          style="width:80%">
-    <h5 align="left"> 
-    Caption 
-    </h5>
 </p>
 
 To set up and start a game use the features as explained in the following.
@@ -58,6 +55,6 @@ In order to run the code you need to have Python 3 with matplotlib. I used Pytho
          alt=""
          style="width:80%">
     <h5 align="left"> 
-    Caption 
+    $1000 generations of a 100 \times $100$ grid initiated with a 15\% live-rate random configuration.
     </h5>
 </p>
