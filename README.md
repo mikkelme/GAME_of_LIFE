@@ -10,7 +10,7 @@ Game of life is a zero-player game which plays out on a 2D board of cells (dead 
 2. Any dead cell with three live neighbours becomes a live cell.
 3. All other live cells die in the next generation. Similarly, all other dead cells stay dead.
 
-## Use 
+## Basic usage
 
 To try out the GUI simply run 
 
@@ -20,7 +20,7 @@ python GAME_of_LIFE.py
 This should prompt the following matplotlib window.
 
 <p align="center">
-    <img src="startup_view.png"
+    <img src="figures/startup_view.png"
          alt=""
          style="width:80%">
     <h5 align="left"> 
@@ -49,3 +49,15 @@ GENERATION
 ## Requirements
 
 In order to run the code you need to have Python 3 with matplotlib. I used Python 3.8.3 and matplotlib 3.3.2.
+
+## Example
+
+
+<p align="center">
+    <img src="figures/100x100_15pct_example.gif"
+         alt=""
+         style="width:80%">
+    <h5 align="left"> 
+    Caption 
+    </h5>
+</p>

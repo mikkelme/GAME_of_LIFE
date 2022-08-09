@@ -328,6 +328,8 @@ class GAME_of_LIFE:
         self.generation = 0
         self.update_plot()
         self.fig.canvas.draw_idle()
+        self.fig.savefig(f"GIF/frame0") # save frame
+
 
 
     def reset(self, botton_axes):
@@ -412,6 +414,7 @@ class GAME_of_LIFE:
         self.generation += 1
         self.update_plot()
         self.fig.canvas.draw_idle()
+        self.fig.savefig(f"GIF/frame{self.generation}") # save frame
 
 
     def get_neighbour_sum(self, i,j):
